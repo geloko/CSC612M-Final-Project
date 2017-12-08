@@ -1,15 +1,13 @@
-
-
-import java.util.*;
+import java.util.Arrays;
 
 public class ParallelMergeSort
 {
 
-    public static void parallelMergeSort(String input, int[] dataSet, int threadCount)
+    public static void parallelMergeSort(char[] input, int[] dataSet, int threadCount)
     {
         if (threadCount <= 1)
         {
-            mergeSort(input.toCharArray(), dataSet);
+            mergeSort(input, dataSet);
         } else
         {
             if (dataSet.length >= 2)
@@ -22,9 +20,10 @@ public class ParallelMergeSort
 
                 Thread lThread = new Thread(new SorterThread(input, left, threadCount / 2));
                 Thread rThread = new Thread(new SorterThread(input, right, threadCount / 2));
+                
                 lThread.start();
                 rThread.start();
-
+                long BWTabsoluteStartTime = System.nanoTime();
                 try
                 {
                     lThread.join();
@@ -32,8 +31,7 @@ public class ParallelMergeSort
                 } catch (InterruptedException ie)
                 {
                 }
-
-                merge(input.toCharArray(), left, right, dataSet);
+                merge(input, left, right, dataSet);
             }
         }
     }

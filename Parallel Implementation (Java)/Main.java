@@ -18,19 +18,16 @@ public class Main
 		
 		//System.out.print("String Input:");
 		//String input = sc.nextLine();
-		String input = "abracadabra$";
-		System.out.println(input.length());
-        long BWTabsoluteStartTime = System.nanoTime();
-        BWT(input);
+		
+		String input = new RandomString(32768).nextString();
+		
+		long BWTabsoluteStartTime = System.nanoTime();
+        int[] indices = BWT(input);
 
         System.out.println("BWT Runtime: "+ + (System.nanoTime() - BWTabsoluteStartTime) / 1000000000f + " Seconds" );
         System.out.println("Burrow Wheel Transformed: " + this.bwt);
-		
-		System.out.println(CTable.get(uniqueCharIndex.get('a')));
-		int nextChar = uniqueCharIndex.get('a') + 1;
-		
-		System.out.println(CTable.get(nextChar));
-		generateRankTable();
+	
+		generateRankTable(input, indices);
 		System.out.println("Substring: ");
 		while((input = sc.nextLine()).length() > 0)
 		{
@@ -40,20 +37,23 @@ public class Main
 		
 	}
 	
-	public void BWT(String input)
+	public int[] BWT(String input)
 	{
-		InputComparator comparator = new InputComparator(input);
-        //Integer[] indices = IntStream.of( IntStream.range(0, input.length()).toArray() ).boxed().toArray( Integer[]::new );
-		
-		//Arrays.sort(indices, comparator);
-		//Arrays.parallelSort(indices, comparator);
-
 		int[] indices = IntStream.range(0, input.length()).toArray();
-		ParallelMergeSort.parallelMergeSort(input, indices, 2);
+		ParallelMergeSort.parallelMergeSort(input.toCharArray(), indices, 16);
 
 
 		 
 		String bwt = "";
+		
+		this.bwt = bwt;
+		
+		return indices;
+	}
+	
+	public void generateRankTable(String input, int[] indices)
+	{
+		
 		int c = 0;
 		for(int i = 0; i < input.length(); i++)
 		{
@@ -64,15 +64,8 @@ public class Main
 				CTable.add(i);
 				uniqueCharIndex.put(input.charAt(indices[i]), CTable.size() - 1);
 			}
-			
-			System.out.println(input.charAt(indices[i]));
 		}
 		
-		this.bwt = bwt;
-	}
-	
-	public void generateRankTable()
-	{
 		rankTable = new int[uniqueCharIndex.size()][bwt.length()];
 		for(int i = 0; i < bwt.length(); i++)
 		{
@@ -89,28 +82,21 @@ public class Main
 			}
 			rankTable[uniqueCharIndex.get(bwt.charAt(i))][i] += 1;
 		}
-		
-		for(int i = 0; i < uniqueCharIndex.size(); i++)
-		{
-			for(int j = 0; j < bwt.length(); j++)
-			{
-				System.out.print(rankTable[i][j] + " ");
-			}
-			System.out.println();
-		}
 	}
 	
 	public void FMIndex(String input)
 	{
 		int s, e;
 		s = CTable.get(uniqueCharIndex.get(input.charAt(input.length() - 1))) + 1;
-		e = CTable.get(uniqueCharIndex.get(input.charAt(input.length() - 1)) + 1);
-		System.out.println("S = " + s + " E = " + e);
-		for(int i = input.length() - 2; i > 0; i--)
+		if(uniqueCharIndex.get(input.charAt(input.length() - 1)) + 1 < CTable.size())
+			e = CTable.get(uniqueCharIndex.get(input.charAt(input.length() - 1)) + 1);
+		else
+			e = bwt.length();
+		
+		for(int i = input.length() - 2; i >= 0; i--)
 		{
 			s = CTable.get(uniqueCharIndex.get(input.charAt(i))) + rankTable[uniqueCharIndex.get(input.charAt(i))][s - 2] + 1;
 			e = CTable.get(uniqueCharIndex.get(input.charAt(i))) + rankTable[uniqueCharIndex.get(input.charAt(i))][e - 1];
-			System.out.println("S = " + s + " E = " + e);
 		}
 		
 		System.out.println("Occurences: " + (e - s + 1));

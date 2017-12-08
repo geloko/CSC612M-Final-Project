@@ -4,7 +4,7 @@ import java.util.Objects;
 import java.util.Random;
 
 public class RandomString {
-
+	//Used for generating randoms strings
     /**
      * Generate a random string.
      */
