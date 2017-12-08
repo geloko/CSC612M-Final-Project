@@ -52,4 +52,4 @@ print("\nNumber of substrings present:", substring_count)
 substring_index = []
 if(substring_count > 0):
     substring_index = [i for i, j in enumerate(search) if j == substring]
-    print("\nIndex/Indices where the substring is present:", substring_index)
+    print("Index/Indices where the substring is present:", substring_index)
