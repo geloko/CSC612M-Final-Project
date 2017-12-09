@@ -20,20 +20,21 @@ class BurrowsWheeler(object):
 		last_column = [row[-1:] for row in bwt]
 
 		dt = datetime.now() - start_time
-		millis = (dt.days * 24 * 60 * 60 + dt.seconds) * 1000 + dt.microseconds / 1000.0
+
+		print("Done!")
+		print("Runtime in seconds:", dt.seconds,".", dt.microseconds)
+		print("\nBWT:", "".join(last_column))
+
 
 		for i in range(len(input)):
 		    print(rotations[i])   
-
+		
 		print('')
-
+		
 		for i in range(len(input)):
 		    print(bwt[i])
-		    
-		print("\nBWT:", "".join(last_column))
-		print("Runtime in milliseconds:", millis)
 
-		return millis, "".join(last_column)
+		return dt, "".join(last_column)
 
 	def getFMIndex(self, last_column, substring):
 		# Perform FM-Index compression
