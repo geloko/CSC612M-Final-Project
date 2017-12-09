@@ -8,6 +8,7 @@ class BurrowsWheeler(object):
 		rotations = []
 
 		start_time = datetime.now()
+		print("Started BWT at:", start_time)
 
 		# Step 1 - List all possible rotations of the string
 		for i in range(len(input)):
@@ -19,12 +20,13 @@ class BurrowsWheeler(object):
 		# Step 3 - Get the last characters of the sorted rotations
 		last_column = [row[-1:] for row in bwt]
 
-		dt = datetime.now() - start_time
+		end_time = datetime.now()
+		print("Finished BWT at:", end_time)
 
-		print("Done!")
-		print("Runtime in seconds:", dt.seconds,".", dt.microseconds)
+		runtime = end_time - start_time
+		print("\nBWT runtime in seconds:", runtime.seconds, ".", runtime.microseconds)
+
 		print("\nBWT:", "".join(last_column))
-
 
 		for i in range(len(input)):
 		    print(rotations[i])   
@@ -34,7 +36,7 @@ class BurrowsWheeler(object):
 		for i in range(len(input)):
 		    print(bwt[i])
 
-		return dt, "".join(last_column)
+		return runtime, "".join(last_column)
 
 	def getFMIndex(self, last_column, substring):
 		# Perform FM-Index compression
