@@ -24,22 +24,21 @@ print("\nBWT:", "".join(bwt))
 substring = 'ana'
 
 # Perform FM-Index compression
-search = sorted(bwt)
+fm_index = sorted(bwt)
 for i in range(1, len(substring)):
     print("\nPass #", i)
-    search = sorted(search)
+    fm_index = sorted(fm_index)
+    fm_index = [x + y for x, y in zip(bwt, fm_index)]
+    
     for j in range(len(bwt)):
-        search[j] = bwt[j] + search[j]
+        print(fm_index[j])
         
-    for j in range(len(search)):
-        print(search[j])
-
 # FM-Index Count - get the number of occurences of the substring within the compressed text
-substring_count = search.count(substring)
+substring_count = fm_index.count(substring)
 print("\nNumber of substrings present:", substring_count)
 
 # FM-Index Locate - locate the position(s) of the substring within the compressed text
 substring_index = []
 if(substring_count > 0):
-    substring_index = [i for i, j in enumerate(search) if j == substring]
+    substring_index = [i for i, j in enumerate(fm_index) if j == substring]
     print("Index/Indices where the substring is present:", substring_index)
