@@ -1,16 +1,14 @@
 public class SorterThread implements Runnable {
-	private int[] numberArray;
 	private int threadCount;
-	private char[] input;
+	private String[] input;
 	
-	public SorterThread(char[] input, int[] numberArray, int threadCount) {
-		this.numberArray = numberArray;
+	public SorterThread(String[] input, int threadCount) {
 		this.threadCount = threadCount;
 		this.input = input;
 	}
 	
 	public void run() {
 		//System.out.println("Thread Started");
-		ParallelMergeSort.parallelMergeSort(input, numberArray, threadCount);
+		ParallelMergeSort.parallelMergeSort(input, threadCount);
 	}
 }
