@@ -57,8 +57,6 @@ public class Main
 		int c = 0;
 		for(int i = 0; i < input.length(); i++)
 		{
-			bwt = bwt.concat(input.charAt((indices[i] + input.length() - 1) % input.length()) + "");
-			
 			if(i == 0 || input.charAt(indices[i]) > input.charAt(indices[i - 1]))
 			{
 				CTable.add(i);
