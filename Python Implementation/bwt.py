@@ -1,8 +1,8 @@
-import numpy as np
 from datetime import datetime
 from datetime import timedelta
 
-input = "banana$"
+file = open("test.txt", "r")
+input = "".join(file.read().splitlines()) + "$"
 
 start_time = datetime.now()
 print("Started BWT at:", start_time)

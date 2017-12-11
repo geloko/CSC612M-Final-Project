@@ -1,3 +1,8 @@
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -12,6 +17,12 @@ public class Main
 	private HashMap<Character, Integer> uniqueCharIndex = new HashMap<Character, Integer>();
 	private int[][] rankTable;
 	
+	static String readFile(String path, Charset encoding) throws IOException 
+	{
+	  byte[] encoded = Files.readAllBytes(Paths.get(path));
+	  return new String(encoded, encoding);
+	}
+	
 	public void execute()
 	{
 		Scanner sc = new Scanner(System.in);
@@ -19,13 +30,23 @@ public class Main
 		//System.out.print("String Input:");
 		//String input = sc.nextLine();
 		
-		String input = new RandomString(32768).nextString();
+		String input = "";
+		try {
+			input = readFile("banana.txt", StandardCharsets.UTF_8);
+			input = input.replaceAll("\\n|\\r", "");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		//String input = new RandomString(64).nextString();
+		System.out.println(input);
 		
 		long BWTabsoluteStartTime = System.nanoTime();
         int[] indices = BWT(input);
-
         System.out.println("BWT Runtime: "+ + (System.nanoTime() - BWTabsoluteStartTime) / 1000000000f + " Seconds" );
-        System.out.println("Burrow Wheel Transformed: " + this.bwt);
+        
+        System.out.println("Burrow Wheel Transformed: " + bwt);
 	
 		generateRankTable(input, indices);
 		System.out.println("Substring: ");
@@ -45,7 +66,10 @@ public class Main
 
 		 
 		String bwt = "";
-		
+		for(int i = 0; i < input.length(); i++)
+		{
+			bwt = bwt.concat(input.charAt((indices[i] + input.length() - 1) % input.length()) + "");
+		}
 		this.bwt = bwt;
 		
 		return indices;
@@ -57,6 +81,7 @@ public class Main
 		int c = 0;
 		for(int i = 0; i < input.length(); i++)
 		{
+			
 			if(i == 0 || input.charAt(indices[i]) > input.charAt(indices[i - 1]))
 			{
 				CTable.add(i);
@@ -96,6 +121,7 @@ public class Main
 			s = CTable.get(uniqueCharIndex.get(input.charAt(i))) + rankTable[uniqueCharIndex.get(input.charAt(i))][s - 2] + 1;
 			e = CTable.get(uniqueCharIndex.get(input.charAt(i))) + rankTable[uniqueCharIndex.get(input.charAt(i))][e - 1];
 		}
+
 		
 		System.out.println("Occurences: " + (e - s + 1));
 	}
